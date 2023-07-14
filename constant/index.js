@@ -37,23 +37,6 @@ const futureExchangeProducts = [
         code: 'B',
         name: '豆二',
         exchange: 'XDCE',
-        subItems: [
-            {
-                key: '20001',
-                code: 'B0503',
-                name: '豆二B0503合约'
-            },
-            {
-                key: '20002',
-                code: 'B0505',
-                name: '豆二B0505合约'
-            },
-            {
-                key: '20003',
-                code: 'B0507',
-                name: '豆二B0507合约'
-            },
-        ]
     },
     {
         key: '3',

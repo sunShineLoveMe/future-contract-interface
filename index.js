@@ -21,7 +21,6 @@ const pool = mysql.createPool({
     database: CONNECTED_DATABASE
 });
 
-
 // 定义一个 GET 请求的路由，用于查询菜单列表
 app.get('/menuList', (req, res) => {
     // 从连接池中获取一个连接
@@ -89,11 +88,23 @@ app.get('/menuList', (req, res) => {
                     item.subItems = [];
                 }
             });
+            // 返回的结果增加交易所代码
+            const handledFilterdData = filteredData.map(item => {
+                const productCode = item.code;
+                const exchange = futureExchangeProducts.find(exchange => exchange.code === productCode);
+                const exchangeCode = exchange ? exchange.exchange : null;
+                const productName = exchange ? exchange.name : null;
+                return {
+                    ...item,
+                    exchange: exchangeCode,
+                    name: productName
+                }
+            })
             // 返回查询结果
             res.json({
                 code: 200,
                 status: 'success',
-                data: filteredData
+                data: handledFilterdData
             });
         });
     });
