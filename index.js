@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors')
 const mysql = require('mysql')
 const { futureExchanges, futureExchangeProducts } = require("./constant/index.js")
 
@@ -11,6 +12,7 @@ const {
 
 // 创建一个 Express 应用程序
 const app = express();
+app.use(cors())
 
 // 创建一个 MySQL 数据库连接池
 const pool = mysql.createPool({
