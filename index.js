@@ -24,10 +24,13 @@ const pool = mysql.createPool({
 });
 
 // 定义一个根据id查询所有list数据的列表
-app.get('/detail/:id', (req, res) => {
+app.get('/api/detail/:id', (req, res) => {
     const menuId = req.params.id;
     // 查询与menu_id相匹配的所有行数据
-    const query = `SELECT id, menu_id, DATE_FORMAT(date, '%Y-%m-%d') AS date, open, high, low, close, volume, money, open_interest FROM stock WHERE menu_id = ${mysql.escape(menuId)}`;
+    const query = `SELECT s.id, s.menu_id, m.name AS menu_name, DATE_FORMAT(s.date, '%Y-%m-%d') AS date, s.open, s.high, s.low, s.close, s.volume, s.money, s.open_interest 
+    FROM stock AS s 
+    JOIN menu AS m ON s.menu_id = m.id 
+    WHERE s.menu_id = ${mysql.escape(menuId)}`;
     // 从连接池中获取一个连接
     pool.getConnection((err, connection) => {
         if (err) {
@@ -51,7 +54,7 @@ app.get('/detail/:id', (req, res) => {
 })
 
 // 定义一个 GET 请求的路由，用于查询菜单列表
-app.get('/menuList', (req, res) => {
+app.get('/api/menuList', (req, res) => {
     // 从连接池中获取一个连接
     pool.getConnection((err, connection) => {
         if (err) {
@@ -140,7 +143,7 @@ app.get('/menuList', (req, res) => {
 });
 
 // 用于查询一级菜单信息
-app.get('/menuParentList', (req, res) => {
+app.get('/api/menuParentList', (req, res) => {
     // 从连接池中获取一个连接
     pool.getConnection((err, connection) => {
         if (err) {
