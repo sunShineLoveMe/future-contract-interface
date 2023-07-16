@@ -23,6 +23,33 @@ const pool = mysql.createPool({
     database: CONNECTED_DATABASE
 });
 
+// 定义一个根据id查询所有list数据的列表
+app.get('/detail/:id', (req, res) => {
+    const menuId = req.params.id;
+    // 查询与menu_id相匹配的所有行数据
+    const query = `SELECT id, menu_id, DATE_FORMAT(date, '%Y-%m-%d') AS date, open, high, low, close, volume, money, open_interest FROM stock WHERE menu_id = ${mysql.escape(menuId)}`;
+    // 从连接池中获取一个连接
+    pool.getConnection((err, connection) => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ code: 500, status: '数据库连接异常' });
+        } else {
+            // 执行SQL查询
+            connection.query(query, (err, results) => {
+                // 释放连接
+                connection.release();
+
+                if (err) {
+                    console.error(err);
+                    res.status(500).json({ code: 500, status: '数据库连接异常' });
+                } else {
+                    res.json({ code: 200, status: 'OK', data: results });
+                }
+            });
+        }
+    });
+})
+
 // 定义一个 GET 请求的路由，用于查询菜单列表
 app.get('/menuList', (req, res) => {
     // 从连接池中获取一个连接
